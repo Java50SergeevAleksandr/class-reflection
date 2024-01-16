@@ -22,18 +22,20 @@ public class JoinStringsPerformanceAppl {
 		if (args.length == 0) {
 			System.out.println("Usage <name of class as an argument>");
 		} else {
-			IntStream.range(0, args.length).forEach(s -> {
+			for (String className : args) {
 				try {
-					Class<JoinStrings> classJS = (Class<JoinStrings>) Class.forName(BASE_PACKAGE + args[s]);
+					Class<JoinStrings> classJS = (Class<JoinStrings>) Class.forName(BASE_PACKAGE + className);
 					Constructor<JoinStrings> constructor = classJS.getConstructor();
 					JoinStrings instance = constructor.newInstance();
-					JoinStringPerformanceTest test = new JoinStringPerformanceTest(getTestName(args[s]), N_RUNS,
-							bigArray, instance);
+					JoinStringPerformanceTest test = new JoinStringPerformanceTest(getTestName(classJS.getSimpleName()),
+							N_RUNS, bigArray, instance);
 					test.run();
+				} catch (ClassNotFoundException e) {
+					System.out.println(e);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			});
+			}
 		}
 	}
 
